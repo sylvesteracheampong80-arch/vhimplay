@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vhimplay - From Kumasi to the World</title>
+<style>
+body{background:#000;color:#fff;font-family:sans-serif;margin:0;padding-bottom:70px}
+header{padding:15px;text-align:center;font-weight:bold;font-size:22px;border-bottom:1px solid #222;position:sticky;top:0;background:#000}
+header span{color:#ff0050}
+.feed{height:70vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px}
+button{background:#ff0050;color:#fff;border:0;padding:12px 20px;border-radius:25px;font-weight:bold}
+nav{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:#111;padding:12px 0;border-top:1px solid #222;z-index:10}
+.wallet-card{background:#111;margin:15px;padding:20px;border-radius:15px;border:1px solid #222}
+input,select{width:95%;padding:12px;border-radius:8px;border:0;background:#222;color:#fff;margin:8px 0}
+</style>
+</head>
+<body>
+<header><span>VHIM</span>PLAY <small style="font-size:10px;display:block;color:#888;letter-spacing:1px">From Kumasi to the World</small></header>
+
+<div id="page-home" class="page">
+  <div class="feed">
+    <h2>🔥 For You</h2>
+    <p style="color:#888">Swipe up - Videos sorted by viral + your interests</p>
+    <div style="margin-top:20px;background:#111;padding:15px;border-radius:12px;width:80%">
+      <p>📹 Video 1 - Dance Challenge 🇬🇭</p>
+      <button>❤️ 12.5K | 🛒 Buy ₵120</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-live" class="page" style="display:none">
+  <div class="wallet-card">
+    <h3>🔴 Go Live</h3>
+    <p id="follower-count">Checking followers...</p>
+    <div style="background:#333;height:10px;border-radius:5px"><div id="progress" style="background:#ff0050;height:10px;width:12%"></div></div>
+    <br>
+    <button id="live-btn" disabled>Need 1000 Followers</button>
+    <p style="color:#888;font-size:12px;margin-top:10px">You need 1000 followers to unlock Live Selling. Post daily to grow!</p>
+  </div>
+  <div class="wallet-card"><h4>Live Now</h4><p>🔴 Ama in Kumasi - Selling Kente - 234 viewers</p><p>🔴 Kwame Tech Review - 120 viewers</p></div>
+</div>
+
+<div id="page-wallet" class="page" style="display:none">
+  <div class="wallet-card">
+    <h3>💰 Wallet</h3>
+    <h1 style="font-size:36px">₵ <span id="balance">0.00</span></h1>
+    <p style="color:#888">Total Earned: ₵ <span id="earned">0</span></p>
+    <button onclick="withdraw()" style="width:100%;margin-top:10px">Withdraw Money</button>
+    <hr style="border:0;border-top:1px solid #222;margin:15px 0">
+    <p style="font-size:12px;color:#888">Withdrawal Method</p>
+    <select><option>MTN Mobile Money</option><option>Vodafone Cash</option><option>AirtelTigo Money</option><option>Nigeria Bank Transfer</option><option>PayPal / US UK Bank</option></select>
+    <input placeholder="MoMo Number / Account Number">
+    <input placeholder="Account Name">
+    <p style="font-size:11px;color:#888">Min withdrawal: 50 GHS. 1 per day. Admin approves in 24h.</p>
+  </div>
+  <div class="wallet-card"><h4>Recent Transactions</h4><p>✅ Sale: Kente Shirt +₵108 (90%)</p><p>🎁 Gift: Rose +₵0.70</p><p>⏳ Withdrawal: -₵100 Pending</p></div>
+</div>
+
+<nav>
+  <span onclick="show('home')">🏠 Home</span>
+  <span onclick="show('live')">🔴 Live</span>
+  <span style="background:#ff0050;padding:5px 12px;border-radius:20px">+</span>
+  <span onclick="show('wallet')">💰 Wallet</span>
+  <span>👤 Me</span>
+</nav>
+
+<script>
+function show(p){document.querySelectorAll('.page').forEach(e=>e.style.display='none');document.getElementById('page-'+p).style.display='block';}
+let followers=127;
+document.getElementById('follower-count').innerText=`You have ${followers} / 1000 followers to Go Live`;
+document.getElementById('progress').style.width=(followers/10)+'%';
+if(followers>=1000){let b=document.getElementById('live-btn');b.disabled=false;b.innerText='🔴 GO LIVE NOW';b.style.background='#00ff88';b.style.color='#000'}
+function withdraw(){let amt=prompt('Amount? Min 50 GHS');if(amt>=50) alert('Withdrawal '+amt+' GHS - Pending approval! Will be sent to your MoMo in 24h');else alert('Min is 50 GHS');}
+</script>
+</body>
+  </html>
