@@ -1,13 +1,109 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VhimPlay WORLD</title><style>*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}body{background:#000;color:#fff}.header{position:fixed;top:0;width:100%;background:#000;padding:12px 15px;display:flex;justify-content:space-between;z-index:100;border-bottom:1px solid #222}.logo{color:#fe2c55;font-weight:900;font-size:16px}.btn-live{background:#fe2c55;color:#fff;border:none;padding:7px 18px;border-radius:20px;font-weight:700}.wallet-top{background:#111;padding:4px 10px;border-radius:20px;font-size:13px;border:1px solid #333}.main{padding-top:60px;padding-bottom:70px}.video-card{position:relative;height:calc(100vh - 175px);background:#111;display:flex;align-items:center;justify-content:center}.video-info{position:absolute;bottom:15px;left:15px}.nav{position:fixed;bottom:0;width:100%;background:#000;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #222}.modal{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.modal.active{display:flex}.box{background:#1a1a1a;width:100%;max-width:380px;border-radius:15px;padding:25px;border:1px solid #333}.input{width:100%;padding:12px;border-radius:8px;border:1px solid #333;background:#000;color:#fff;margin-bottom:12px}.btn-primary{width:100%;background:#fe2c55;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:700}.btn-sec{width:100%;background:#333;color:#fff;border:none;padding:10px;border-radius:8px;margin-top:8px}.wallet-card{background:#111;border:1px solid #222;border-radius:12px;padding:15px;margin:15px}.row{display:flex;justify-content:space-between;margin:8px 0;font-size:14px}.filter-bar{display:flex;gap:8px;padding:10px 15px;overflow:auto}.filter-chip{padding:5px 14px;border-radius:20px;font-size:12px;background:#222;border:1px solid #333}.filter-chip.active{background:#fe2c55}</style></head><body><div class="header"><div class="logo">VhimPlay 🌍 WORLD</div><div style="display:flex;gap:10px"><div class="wallet-top" onclick="openWallet()">₵<span id="topBal">0</span></div><button class="btn-live" onclick="tryGoLive()">GO LIVE</button></div></div><div class="main"><div class="filter-bar"><span class="filter-chip active">🌍 World</span><span class="filter-chip">🇬🇭 Ghana</span><span class="filter-chip">📍 Kumasi</span><span class="filter-chip">🇳🇬 Nigeria</span><span class="filter-chip">🇺🇸 USA</span></div><div class="video-card"><div style="text-align:center"><div style="font-size:50px">🌍▶️</div><p style="color:#888;margin-top:10px">WORLD FEED<br><span style="font-size:11px">From Ghana To The World</span><br><span style="font-size:11px;color:#fe2c55">● 12.5K watching</span></p></div><div class="video-info">@<span id="displayUser">guest</span> • <span id="fCount">0</span> followers • 🌍</div></div><div class="wallet-card"><h3>💰 Global Wallet</h3><div class="row"><span>Balance</span><b>₵<span id="bal">0</span></b></div><div class="row"><span>Followers</span><b id="fCount2">0/1000</b></div><button class="btn-sec" onclick="openWallet()">Withdraw</button><button class="btn-sec" onclick="addF()">+ Add 200 Global Followers</button><button class="btn-sec" onclick="logout()">Logout</button></div><div class="wallet-card" id="adminPanel" style="display:none;border-color:#fe2c55"><h3 style="color:#fe2c55">👑 GLOBAL ADMIN</h3><div id="adminW"></div><div id="adminU"></div></div></div><div class="nav"><div class="nav-item">🏠<br>Home</div><div class="nav-item">🔍<br>World</div><div style="width:45px;height:32px;background:#fe2c55;border-radius:8px;display:flex;align-items:center;justify-content:center" onclick="tryGoLive()">+</div><div class="nav-item" onclick="openWallet()">💼<br>Wallet</div><div class="nav-item" onclick="openLogin()">👤<br>Profile</div></div><div class="modal active" id="loginM"><div class="box"><h2>🌍 Join World</h2><input id="phone" class="input" placeholder="Phone"><input id="pass" class="input" type="password" placeholder="Password"><button class="btn-primary" onclick="login()">Join Global</button><p style="font-size:11px;color:#888;text-align:center;margin-top:8px">Admin: 0240000000 / admin<br>From Ghana 🇬🇭 To The World 🌍</p></div></div><div class="modal" id="liveM"><div class="box"><h2 id="liveT"></h2><p id="liveMsg" style="text-align:center;margin-bottom:15px"></p><button class="btn-primary" onclick="document.getElementById('liveM').classList.remove('active')">OK</button></div></div><div class="modal" id="walM"><div class="box"><h2>Global Withdraw</h2><p style="text-align:center">Bal: ₵<span id="wBal">0</span></p><input id="momo" class="input" placeholder="MoMo / PayPal"><input id="amt" class="input" type="number" placeholder="Amount min 10"><button class="btn-primary" onclick="withdraw()">Request</button><button class="btn-sec" onclick="document.getElementById('walM').classList.remove('active')">Close</button><div id="myW"></div></div></div><script>
-let cu=JSON.parse(localStorage.getItem('vhim_user')||'null'),us=JSON.parse(localStorage.getItem('vhim_users')||'{}'),wd=JSON.parse(localStorage.getItem('vhim_withdraws')||'[]');
-function sv(){localStorage.setItem('vhim_users',JSON.stringify(us));localStorage.setItem('vhim_withdraws',JSON.stringify(wd));localStorage.setItem('vhim_user',JSON.stringify(cu));}
-function login(){let p=document.getElementById('phone').value.trim(),pw=document.getElementById('pass').value.trim();if(!p)return alert('phone');if(p==='0240000000'&&pw==='admin'){cu={phone:p,username:'admin',followers:10000,balance:9999,isAdmin:true};document.getElementById('loginM').classList.remove('active');up();return;}if(!us[p])us[p]={phone:p,username:'user_'+p.slice(-4),followers:0,balance:125};cu=us[p];cu.isAdmin=false;sv();document.getElementById('loginM').classList.remove('active');up();}
-function up(){if(!cu){document.getElementById('loginM').classList.add('active');return;}document.getElementById('displayUser').innerText=cu.username;document.getElementById('fCount').innerText=cu.followers;document.getElementById('fCount2').innerText=cu.followers+'/1000';document.getElementById('bal').innerText=cu.balance.toFixed(2);document.getElementById('topBal').innerText=cu.balance.toFixed(2);document.getElementById('wBal').innerText=cu.balance.toFixed(2);document.getElementById('adminPanel').style.display=cu.isAdmin?'block':'none';if(cu.isAdmin)renderA();renderMy();}
-function tryGoLive(){if(!cu)return openLogin();let m=document.getElementById('liveM');m.classList.add('active');if(cu.followers>=1000){document.getElementById('liveT').innerText='🔴 LIVE TO WORLD!';document.getElementById('liveMsg').innerText='You are LIVE worldwide! 🌍';}else{document.getElementById('liveT').innerText='Need 1000 Global Followers';document.getElementById('liveMsg').innerText='You have '+cu.followers+', need '+(1000-cu.followers)+' more.';}}
-function openLogin(){document.getElementById('loginM').classList.add('active');}function openWallet(){if(!cu)return openLogin();document.getElementById('walM').classList.add('active');}
-function addF(){cu.followers+=200;if(!cu.isAdmin)us[cu.phone]=cu;sv();up();alert('Now '+cu.followers);}function withdraw(){let n=document.getElementById('momo').value.trim(),a=parseFloat(document.getElementById('amt').value);if(!n||!a)return alert('fill');if(a<10)return alert('min10');if(a>cu.balance)return alert('low');cu.balance-=a;if(!cu.isAdmin)us[cu.phone]=cu;wd.push({id:Date.now(),user_phone:cu.phone,momo_number:n,amount:a,status:'pending'});sv();up();alert('sent');document.getElementById('walM').classList.remove('active');}
-function renderMy(){let my=wd.filter(w=>cu&&w.user_phone===cu.phone).reverse();let h='<h4>My Withdraws</h4>';my.forEach(w=>h+=`<div class="row"><span>${w.amount} to ${w.momo_number}</span><span>${w.status}</span></div>`);document.getElementById('myW').innerHTML=h;}
-function renderA(){let h='<h4>Pending</h4>';let p=wd.filter(w=>w.status==='pending');if(!p.length)h+='<p style="color:#666;font-size:12px">No pending</p>';p.forEach(w=>h+=`<div style="background:#111;border:1px solid #222;padding:10px;border-radius:10px;margin-bottom:8px"><div>${w.user_phone} ₵${w.amount} to ${w.momo_number}</div><button class="btn-primary" style="padding:6px;margin-top:6px" onclick="approve(${w.id})">Approve</button> <button class="btn-sec" style="padding:6px" onclick="reject(${w.id})">Reject</button></div>`);document.getElementById('adminW').innerHTML=h;let u='<h4>Users tap to make 1000</h4>';Object.values(us).forEach(x=>u+=`<div style="background:#111;padding:8px;border-radius:8px;margin-bottom:6px" onclick="make('${x.phone}')">${x.phone} - ${x.followers} - ₵${x.balance}</div>`);document.getElementById('adminU').innerHTML=u;}
-function approve(id){let w=wd.find(x=>x.id===id);if(w){w.status='approved';sv();renderA();}}function reject(id){let w=wd.find(x=>x.id===id);if(w){let u=us[w.user_phone];if(u)u.balance+=w.amount;if(cu.phone===w.user_phone)cu.balance+=w.amount;w.status='rejected';sv();up();renderA();}}function make(ph){if(us[ph]){us[ph].followers=1000;sv();renderA();alert(ph+' now 1000');}}function logout(){localStorage.removeItem('vhim_user');location.reload();}
-if(cu)document.getElementById('loginM').classList.remove('active');up();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>VhimPlay WORLD - TikTok Style</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto}
+body{background:#000;color:#fff;overflow:hidden;height:100vh}
+.header{position:fixed;top:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:linear-gradient(180deg,rgba(0,0,0,0.8),transparent)}
+.logo{font-weight:900;font-size:20px;letter-spacing:-0.5px}
+.logo span{color:#fe2c55}
+.filters{display:flex;gap:15px;font-weight:700;font-size:15px;opacity:0.7}
+.filters .active{opacity:1;border-bottom:2px solid #fff;padding-bottom:3px}
+.wallet{font-size:13px;background:rgba(255,255,255,0.15);padding:5px 10px;border-radius:20px}
+.feed{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory}
+.post{height:100vh;width:100%;position:relative;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;background:#111}
+.post video,.post img{width:100%;height:100%;object-fit:cover}
+.overlay{position:absolute;bottom:0;left:0;right:0;padding:20px 70px 90px 15px;background:linear-gradient(0deg,rgba(0,0,0,0.8),transparent)}
+.user{font-weight:700;margin-bottom:5px} .caption{font-size:13px;opacity:0.9;line-height:1.3}
+.right-bar{position:absolute;right:10px;bottom:110px;display:flex;flex-direction:column;gap:22px;align-items:center}
+.icon-btn{width:48px;height:48px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;backdrop-filter:blur(10px)}
+.icon-btn.loved{background:#fe2c55}
+.count{font-size:12px;font-weight:600;margin-top:4px}
+.go-live{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#fe2c55;color:#fff;border:none;padding:12px 28px;border-radius:30px;font-weight:900;font-size:15px;z-index:50;box-shadow:0 5px 20px rgba(254,44,85,0.5)}
+.bottom{position:fixed;bottom:0;width:100%;background:#000;display:flex;justify-content:space-around;padding:10px 0 20px;border-top:1px solid #222;z-index:100}
+.nav{font-size:10px;text-align:center;opacity:0.5} .nav.active{opacity:1} .nav b{font-size:20px;display:block}
+.login{position:fixed;inset:0;background:#000;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:340px;background:#121212;border:1px solid #222;padding:25px;border-radius:16px}
+.card h1{font-size:28px;font-weight:900;margin-bottom:15px} .card h1 span{color:#fe2c55}
+input{width:100%;padding:14px;background:#222;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:12px;font-size:15px}
+.btn{width:100%;padding:14px;background:#fe2c55;color:#fff;border:none;border-radius:8px;font-weight:800;font-size:16px}
+.small{font-size:11px;opacity:0.5;text-align:center;margin-top:12px}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+<div class="card">
+<h1>VhimPlay<span>WORLD</span> 🌍</h1>
+<input id="phone" placeholder="Phone number">
+<input id="pass" type="password" placeholder="Password">
+<button class="btn" onclick="join()">Join TikTok World</button>
+<div class="small">Admin: 0240000000 / admin<br>From Ghana 🇬🇭 To The World 🌍<br>₵125 Bonus on signup</div>
+</div>
+</div>
+
+<div class="header">
+<div class="logo">VhimPlay <span>WORLD</span></div>
+<div class="filters"><span class="active">World</span><span>Ghana</span><span>Live</span></div>
+<div class="wallet" id="wallet">₵125</div>
+</div>
+
+<div class="feed" id="feed"></div>
+
+<div class="right-bar">
+<div style="text-align:center"><div class="icon-btn" onclick="like(this)">❤️</div><div class="count">12.5K</div></div>
+<div style="text-align:center"><div class="icon-btn">💬</div><div class="count">856</div></div>
+<div style="text-align:center"><div class="icon-btn">🔗</div><div class="count">Share</div></div>
+<div style="text-align:center"><div class="icon-btn">💰</div><div class="count">Gift</div></div>
+</div>
+
+<button class="go-live" onclick="golive()">+ GO LIVE 🌍</button>
+
+<div class="bottom">
+<div class="nav active"><b>🏠</b>Home</div>
+<div class="nav"><b>🔍</b>Discover</div>
+<div class="nav" style="opacity:1"><b style="background:#fff;color:#000;padding:3px 10px;border-radius:6px">+</b></div>
+<div class="nav"><b>💼</b>Wallet</div>
+<div class="nav"><b>👤</b>Profile</div>
+</div>
+
+<script>
+let bal=125;
+const vids=[
+{user:"@kwame_ghana 🇬🇭",cap:"Kumasi to the WORLD! 🌍 Dancing in Kejetia market #vhimplay #ghana",img:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d"},
+{user:"@amara_nigeria 🇳🇬",cap:"Lagos vibes 🔥 Who's watching from Ghana? Let's connect! #afrobeats",img:"https://images.unsplash.com/photo-1531746020798-e6953c6e8e04"},
+{user:"@sarah_usa 🇺🇸",cap:"Just discovered Ghanaian music 😍 So good! From USA to Ghana ❤️",img:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1"},
+{user:"@tech_bro_kumasi 🇬🇭",cap:"Building VhimPlay WORLD from Kumasi laptop 💻 We go global!",img:"https://images.unsplash.com/photo-1517841905240-472988babdf9"},
+{user:"@world_traveler 🌍",cap:"Your content can reach 8 BILLION people here. Start now.",img:"https://images.unsplash.com/photo-1526772661823-3f88f33771f7"}
+];
+const feed=document.getElementById('feed');
+function render(){
+feed.innerHTML=vids.map(v=>`
+<div class="post">
+<img src="${v.img}?w=600&q=80">
+<div class="overlay">
+<div class="user">${v.user} • 🌍 WORLD</div>
+<div class="caption">${v.cap}</div>
+</div>
+</div>`).join('');
+}
+render();
+function join(){
+const p=document.getElementById('phone').value;
+if(!p){alert('Enter phone');return}
+document.getElementById('login').style.display='none';
+document.getElementById('wallet').innerText='₵'+bal;
+if(p==='0240000000') alert('👑 ADMIN MODE - You control WORLD withdrawals');
+else alert('Welcome to WORLD! ₵125 bonus added!');
+}
+function like(el){el.classList.toggle('loved');}
+function golive(){
+bal+=5;
+document.getElementById('wallet').innerText='₵'+bal;
+alert('🔴 LIVE TO WORLD! Viewers from Ghana, Nigeria, USA joining... +₵5 earned');
+}
+</script>
+</body>
+</html>
